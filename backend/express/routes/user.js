@@ -2,8 +2,12 @@ const express = require("express");
 const router = express.Router();
 const User = require("../../mongo_schema/user");
 const jwt = require("jsonwebtoken");
-const secretKey = require("../jwtsecretkey");
 const bcrypt = require("bcryptjs");
+const dotenv = require("dotenv").config();
+
+const {
+  SECRET_KEY
+} = process.env
 
 router.post("/signup", (req, res, next) => {
   /*cant use null as a username*/
@@ -13,10 +17,12 @@ router.post("/signup", (req, res, next) => {
       regSuc: false,
     });
   }
+  var salt = bcrypt.genSaltSync(10);
+  var hash = bcrypt.hashSync(req.body.password, salt);
   const user = new User({
     username: req.body.username,
     /*store hashed password in database*/
-    password: req.body.password,
+    password: hash,
   });
   /*save the data in mongoDb*/
   user
@@ -59,7 +65,7 @@ async function passwordMatch(
   userHashPassword,
   res
 ) {
-  if (frontEndPassword != userHashPassword) {
+  if (!bcrypt.compareSync(frontEndPassword,userHashPassword)) {
     return res.json({
       message: "Incorrect password",
     });
@@ -70,7 +76,7 @@ async function passwordMatch(
       username: frontEndUsername,
       password: frontEndPassword,
     },
-    secretKey
+    SECRET_KEY
   );
   return res.status(200).json({
     token: token,
