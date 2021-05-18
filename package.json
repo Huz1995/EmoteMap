@@ -29,6 +29,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.2",
     "angular-double-slider": "^2.0.2",
     "angular-material": "^1.2.2",
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^9.0.0",
     "ejs": "^2.6.1",
