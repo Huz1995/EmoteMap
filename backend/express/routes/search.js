@@ -2,9 +2,9 @@ const express = require("express");
 const { detectBufferEncoding } = require("tslint/lib/utils");
 const router = express.Router();
 const GeoJson = require("../../mongo_schema/geoJson");
-const User = require("../../mongo_schema/user");
+const checkAuth = require("../middleware/check-auth");
 
-router.post("", (req, res, next) => {
+router.post("",checkAuth,(req, res, next) => {
   GeoJson.find()
     .populate("properties.userDetails", ["age", "gender", "dob"])
     .sort({ "properties.dateTime": -1 })

@@ -4,6 +4,7 @@ const User = require("../../mongo_schema/user");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const dotenv = require("dotenv").config();
+const checkAuth = require("../middleware/check-auth");
 
 const {
   SECRET_KEY
@@ -84,7 +85,7 @@ async function passwordMatch(
   });
 }
 
-router.get("/:username", (req, res, next) => {
+router.get("/:username", checkAuth,(req, res, next) => {
   User.findOne({ username: req.params.username })
     .then((user) => {
       const date = convertDateToString(user.dob);
@@ -120,7 +121,7 @@ function checkIfGenderNull(gender) {
 }
 
 /*path which updated the user details*/
-router.put("/:username", (req, res, next) => {
+router.put("/:username", checkAuth,(req, res, next) => {
   if (req.body.gender != null) {
     User.updateOne({ username: req.params.username }, { gender: req.body.gender })
       .then((result) => {
