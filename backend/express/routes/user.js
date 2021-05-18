@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require("../../mongo_schema/user");
 const jwt = require("jsonwebtoken");
 const secretKey = require("../jwtsecretkey");
+const bcrypt = require("bcryptjs");
 
 router.post("/signup", (req, res, next) => {
   /*cant use null as a username*/

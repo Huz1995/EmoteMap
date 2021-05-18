@@ -58,7 +58,7 @@ View our [Evaluation and Conclusion](process/evalSect.md) document to see;
 </tr>
 <tr>
   <td>Alfie Graham </td>
-  <td>Front-end, Back-end</td>
+  <td>Front-end</td>
   <td><img src="member_photos/AlfredGraham.jpg" width="100" height="100"></td>
 </tr>
 <tr>
@@ -68,7 +68,7 @@ View our [Evaluation and Conclusion](process/evalSect.md) document to see;
 </tr>
 <tr>
   <td>Zaki Gill</td>
-  <td>Front-end, Academic&Market Research, User-Testing and Prototyping</td>
+  <td>Academic&Market Research, User-Testing and Prototyping</td>
   <td><img src="member_photos/ZakiGill.jpg" width="100" height="100"></td>
 </tr>
 <tr>
