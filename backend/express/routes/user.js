@@ -2,7 +2,13 @@ const express = require("express");
 const router = express.Router();
 const User = require("../../mongo_schema/user");
 const jwt = require("jsonwebtoken");
-const secretKey = require("../jwtsecretkey");
+const bcrypt = require("bcryptjs");
+const dotenv = require("dotenv").config();
+const checkAuth = require("../middleware/check-auth");
+
+const {
+  SECRET_KEY
+} = process.env
 
 router.post("/signup", (req, res, next) => {
   /*cant use null as a username*/
@@ -12,10 +18,12 @@ router.post("/signup", (req, res, next) => {
       regSuc: false,
     });
   }
+  var salt = bcrypt.genSaltSync(10);
+  var hash = bcrypt.hashSync(req.body.password, salt);
   const user = new User({
     username: req.body.username,
     /*store hashed password in database*/
-    password: req.body.password,
+    password: hash,
   });
   /*save the data in mongoDb*/
   user
@@ -58,7 +66,7 @@ async function passwordMatch(
   userHashPassword,
   res
 ) {
-  if (frontEndPassword != userHashPassword) {
+  if (!bcrypt.compareSync(frontEndPassword,userHashPassword)) {
     return res.json({
       message: "Incorrect password",
     });
@@ -69,7 +77,7 @@ async function passwordMatch(
       username: frontEndUsername,
       password: frontEndPassword,
     },
-    secretKey
+    SECRET_KEY
   );
   return res.status(200).json({
     token: token,
@@ -77,7 +85,7 @@ async function passwordMatch(
   });
 }
 
-router.get("/:username", (req, res, next) => {
+router.get("/:username", checkAuth,(req, res, next) => {
   User.findOne({ username: req.params.username })
     .then((user) => {
       const date = convertDateToString(user.dob);
@@ -113,7 +121,7 @@ function checkIfGenderNull(gender) {
 }
 
 /*path which updated the user details*/
-router.put("/:username", (req, res, next) => {
+router.put("/:username", checkAuth,(req, res, next) => {
   if (req.body.gender != null) {
     User.updateOne({ username: req.params.username }, { gender: req.body.gender })
       .then((result) => {

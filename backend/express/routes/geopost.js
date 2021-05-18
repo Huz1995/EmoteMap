@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const GeoJson = require("../../mongo_schema/geoJson");
 const User = require("../../mongo_schema/user");
+const checkAuth = require("../middleware/check-auth");
 
 
 /*gets all post from the db*/
@@ -22,7 +23,7 @@ router.get("", (req, res, next) => {
 });
 
 /*saves a post to the database*/
-router.post("", (req, res, next) => {
+router.post("", checkAuth ,(req, res, next) => {
   const username = req.body.properties.username;
   User.find({ username: username })
     .then((user) => {
@@ -68,7 +69,7 @@ router.post("", (req, res, next) => {
 });
 
 /*sort the date by -1*/
-router.get("/:username", (req, res, next) => {
+router.get("/:username", checkAuth,(req, res, next) => {
   GeoJson.find({
     "properties.username": req.params.username,
   })
@@ -88,7 +89,7 @@ router.get("/:username", (req, res, next) => {
 });
 
 /*removes post from the db*/
-router.delete("/:id", (req, res, next) => {
+router.delete("/:id",checkAuth,(req, res, next) => {
   console.log(req.params.id);
   GeoJson.deleteOne({ _id: req.params.id })
     .then((result) => {

@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { ToolbarComponent } from './toolbar/toolbar.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -40,7 +40,7 @@ import { UserSearchComponent } from './user-search/user-search.component';
 import { NgxSliderModule} from '@angular-slider/ngx-slider';
 import { UsersearchDisplayComponent } from './usersearch-display/usersearch-display.component';
 import { DescriptPopupComponent } from './descript-popup/descript-popup.component';
-
+import { AuthInterceptor } from './authentication/auth.interceptor';
 
 
 
@@ -96,6 +96,7 @@ const material = [
     AuthenticationService,
     UrlStateService,
     PostService,
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
   ],
   bootstrap: [AppComponent],
   entryComponents: [UserpostComponent],
