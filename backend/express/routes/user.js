@@ -86,6 +86,9 @@ async function passwordMatch(
 }
 
 router.get("/:username", checkAuth,(req, res, next) => {
+  if(req.usernameFromToken!=req.params.username) {
+    return res.status(401).json({message: "Unable to get user info"});
+  }
   User.findOne({ username: req.params.username })
     .then((user) => {
       const date = convertDateToString(user.dob);
@@ -122,6 +125,9 @@ function checkIfGenderNull(gender) {
 
 /*path which updated the user details*/
 router.put("/:username", checkAuth,(req, res, next) => {
+  if(req.usernameFromToken!=req.params.username) {
+    return res.status(401).json({message: "Unable to update the userdata"});
+  }
   if (req.body.gender != null) {
     User.updateOne({ username: req.params.username }, { gender: req.body.gender })
       .then((result) => {
