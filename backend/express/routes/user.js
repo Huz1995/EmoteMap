@@ -75,7 +75,6 @@ async function passwordMatch(
   const token = jwt.sign(
     {
       username: frontEndUsername,
-      password: frontEndPassword,
     },
     SECRET_KEY
   );
