@@ -62,7 +62,7 @@ router.post("", checkAuth ,(req, res, next) => {
     })
     .catch((error) => {
       res.status(500).json({
-        message: "user doesnt exist",
+        message: "user doesn't exist",
         error: error,
       });
     });
@@ -88,22 +88,33 @@ router.get("/:username", checkAuth,(req, res, next) => {
     });
 });
 
-/*removes post from the db*/
+/*removes post from the db only by the user who made the post*/
 router.delete("/:id",checkAuth,(req, res, next) => {
-  console.log(req.params.id);
-  GeoJson.deleteOne({ _id: req.params.id })
-    .then((result) => {
-      res.status(200).json({
-        message: "Post deleted",
-        result: result,
-      });
-    })
-    .catch((error) => {
-      res.status(401).json({
-        message: "Post doesn't exist",
-        error: error,
-      });
-    });
+  GeoJson.findOne({_id: req.params.id})
+  .then((result) => {
+    User.findOne({_id: result.properties.userDetails})
+    .then((user)=> {
+      console.log(req.usernameFromToken);
+      console.log(user.username);
+      if(req.usernameFromToken != user.username) {
+        res.status(401).json({message: "Unable to delete the post"});
+      } else {
+        GeoJson.deleteOne({ _id: req.params.id })
+        .then((result) => {
+          res.status(200).json({
+            message: "Post deleted",
+            result: result,
+          });
+        })
+        .catch((error) => {
+          res.status(401).json({
+            message: "Post doesn't exist",
+            error: error,
+          });
+        });
+      }
+    })    
+  } )
 });
 
 module.exports = router;
