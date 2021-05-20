@@ -94,8 +94,6 @@ router.delete("/:id",checkAuth,(req, res, next) => {
   .then((result) => {
     User.findOne({_id: result.properties.userDetails})
     .then((user)=> {
-      console.log(req.usernameFromToken);
-      console.log(user.username);
       if(req.usernameFromToken != user.username) {
         res.status(401).json({message: "Unable to delete the post"});
       } else {
